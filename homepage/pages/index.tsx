@@ -25,7 +25,15 @@ interface HomePageProps {
 
 export default function HomePage({ githubStats, discordStats }: HomePageProps) {
   const router = useRouter();
-  const { locale } = router;
+  const [locale, setLocale] = useState('en');
+  
+  useEffect(() => {
+    // Detect locale from URL query param or browser language
+    const urlLocale = router.query.lang as string;
+    const browserLang = navigator.language.startsWith('zh') ? 'zh' : 'en';
+    const detectedLocale = urlLocale || browserLang;
+    setLocale(detectedLocale === 'zh' ? 'zh' : 'en');
+  }, [router.query.lang]);
 
   // Get translations based on current locale
   const translations = locale === 'zh' ? zhTranslations : enTranslations;
@@ -108,7 +116,7 @@ export default function HomePage({ githubStats, discordStats }: HomePageProps) {
       </Head>
 
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <Navigation translations={translations} />
+        <Navigation translations={translations} locale={locale} onLocaleChange={setLocale} />
 
         <main>
           <Hero
@@ -134,7 +142,7 @@ export default function HomePage({ githubStats, discordStats }: HomePageProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
+export const getStaticProps: GetStaticProps = async () => {
   let githubStats: GitHubStats | null = null;
   let discordStats: DiscordStats | null = null;
 
@@ -201,7 +209,5 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       githubStats,
       discordStats,
     },
-    // Revalidate every hour
-    revalidate: 3600,
   };
 };

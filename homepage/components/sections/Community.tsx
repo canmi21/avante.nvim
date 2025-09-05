@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageCircle, Star, Heart, ExternalLink, Users, GitBranch } from 'lucide-react';
+import { MessageCircle, Heart, ExternalLink, GitBranch } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { formatNumber } from '@/lib/utils';

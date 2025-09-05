@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Brain, Code, Terminal, Lock, Zap, Globe, Settings, Heart } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
+import { Brain, Code, Terminal, Lock } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 
 interface FeaturesProps {
   translations: any;

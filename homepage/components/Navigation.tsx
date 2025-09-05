@@ -5,15 +5,18 @@ import { cn } from '@/lib/utils';
 
 interface NavigationProps {
   translations: any;
+  locale: string;
+  onLocaleChange: (locale: string) => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ translations }) => {
+const Navigation: React.FC<NavigationProps> = ({ translations, locale, onLocaleChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const { locale, pathname, asPath, query } = router;
 
   const handleLanguageChange = (newLocale: string) => {
-    router.push({ pathname, query }, asPath, { locale: newLocale });
+    onLocaleChange(newLocale);
+    // Also update URL for sharing/bookmarking
+    router.push(`${router.pathname}?lang=${newLocale}`, undefined, { shallow: true });
   };
 
   const scrollToSection = (sectionId: string) => {
