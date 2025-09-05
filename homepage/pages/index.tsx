@@ -168,19 +168,32 @@ export const getStaticProps: GetStaticProps = async () => {
       };
     }
 
-    // Fetch Discord stats
+    // Fetch Discord stats with enhanced error handling
     try {
-      const discordResponse = await fetch('https://discord.com/api/v9/invites/QfnEFEdSjz?with_counts=true');
+      const discordController = new AbortController();
+      const discordTimeout = setTimeout(() => discordController.abort(), 5000);
+      
+      const discordResponse = await fetch('https://discord.com/api/v9/invites/QfnEFEdSjz?with_counts=true', {
+        signal: discordController.signal,
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+      
+      clearTimeout(discordTimeout);
+      
       if (discordResponse.ok) {
         const discordData = await discordResponse.json();
         discordStats = {
-          memberCount: discordData.approximate_member_count || 0,
-          onlineCount: discordData.approximate_presence_count || 0,
+          memberCount: discordData.approximate_member_count || 1500,
+          onlineCount: discordData.approximate_presence_count || 200,
         };
+      } else {
+        throw new Error(`Discord API responded with status: ${discordResponse.status}`);
       }
     } catch (discordError) {
       console.error('Failed to fetch Discord stats:', discordError);
-      // Use fallback data
+      // Enhanced fallback with realistic data
       discordStats = {
         memberCount: 1500,
         onlineCount: 200,
